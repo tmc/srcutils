@@ -9,10 +9,12 @@ func init() {
 }
 
 func init() {
-	foobar := func() {
-		x(31, "foobar")
-	}
-	foobar()
+	alreadyPresent(42)
+}
+
+func alreadyPresent(foo int) {
+	x(31, "foobar")
+	x(foo, "foobar")
 }
 
 func init() {

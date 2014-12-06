@@ -1,5 +1,5 @@
 package main
 
-func y(foo int, bar string) {
-	z(foo, bar)
+func y(a int, b string) {
+	z(a, b)
 }
