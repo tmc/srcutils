@@ -15,7 +15,8 @@ type Options struct {
 	argument string   // argument to add
 	args     []string // ssa FromArgs
 	//addAtEnd bool
-	write bool
+	write      bool
+	skipExists bool
 }
 
 var options Options
@@ -28,6 +29,8 @@ func init() {
 			"query, e.g. foo.go:#123,#456, bar.go:#123.")
 	flag.BoolVar(&options.write, "w", false,
 		"write result to (source) file instead of stdout")
+	flag.BoolVar(&options.skipExists, "skip-present", true,
+		"if an argument appears to exist already don't add it")
 }
 
 func main() {
