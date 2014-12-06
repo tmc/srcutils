@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"go/ast"
 	"go/printer"
+	"io/ioutil"
 	"log"
-	"spew"
 	"strings"
 
 	"github.com/tmc/refactor_utils/pos"
@@ -55,12 +55,17 @@ func (r *refactor) addArgument(argumentName, argumentType, position string, skip
 	for file, _ := range modifiedFiles {
 		var buf bytes.Buffer
 		printer.Fprint(&buf, qpos.Fset, file)
-		fmt.Println(string(buf.Bytes()))
+		if options.write {
+			err := ioutil.WriteFile(r.iprog.Fset.Position(file.Pos()).Filename, buf.Bytes(), 644)
+			if err != nil {
+				return err
+			}
+			log.Println("wrote", r.iprog.Fset.Position(file.Pos()).Filename)
+		} else {
+			fmt.Println(string(buf.Bytes()))
+		}
 	}
 
-	if options.write {
-		return fmt.Errorf("not implemented")
-	}
 	return nil
 }
 
@@ -107,7 +112,6 @@ func addParameter(name string, position *pos.QueryPos, skipExists bool) error {
 				return nil
 			}
 		}
-		spew.Dump(fieldList.Args)
 	}
 	fieldList.Args = append([]ast.Expr{newParam}, fieldList.Args...)
 	return nil
