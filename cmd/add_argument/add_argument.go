@@ -54,7 +54,8 @@ func (r *refactor) addArgument(argumentName, argumentType, position string, skip
 
 	for file, _ := range modifiedFiles {
 		var buf bytes.Buffer
-		printer.Fprint(&buf, qpos.Fset, file)
+		cfg := &printer.Config{Mode: printer.SourcePos}
+		cfg.Fprint(&buf, qpos.Fset, file)
 		if options.write {
 			err := ioutil.WriteFile(r.iprog.Fset.Position(file.Pos()).Filename, buf.Bytes(), 644)
 			if err != nil {

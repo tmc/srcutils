@@ -5,7 +5,6 @@ import (
 	"go/ast"
 	"go/build"
 	"go/token"
-	"log"
 	"spew"
 
 	"github.com/tmc/refactor_utils/pos"
@@ -84,7 +83,6 @@ func (r *refactor) callers(qpos *pos.QueryPos) ([]*pos.QueryPos, error) {
 	if target == nil {
 		return nil, fmt.Errorf("no SSA function built for this location (dead code?)")
 	}
-	log.Println("target and path:", target, qpos.Path)
 
 	ptrAnalysis, err := pointer.Analyze(r.ptraCfg)
 	if err != nil {
@@ -129,7 +127,6 @@ func (r *refactor) callersAndCallsites(qpos *pos.QueryPos) ([]*pos.QueryPos, []*
 }
 
 func (r *refactor) addCallersAndCallsites(qpos *pos.QueryPos, allCallers, allCallsites map[token.Pos]*pos.QueryPos) error {
-	log.Println("addCallers:", qpos)
 	if _, present := allCallers[qpos.Start]; present {
 		return nil
 	}
@@ -140,8 +137,6 @@ func (r *refactor) addCallersAndCallsites(qpos *pos.QueryPos, allCallers, allCal
 	}
 	for _, caller := range callers {
 		allCallsites[caller.Start] = caller
-
-		log.Println("caller:", caller)
 
 		parent, err := r.parentFunc(caller.Path)
 		if err != nil {
