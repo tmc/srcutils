@@ -6,6 +6,7 @@ import (
 	"go/ast"
 	"go/printer"
 	"go/token"
+	"log"
 	"strings"
 
 	"github.com/tmc/refactor_utils/pos"
@@ -36,13 +37,13 @@ func (r *refactor) addArgument(argumentName, argumentType, position string) erro
 
 	for _, callPos := range callPositions {
 		if err := addArgument(argumentName, argumentType, callPos); err != nil {
-			return err
+			log.Println(err)
 		}
 	}
 
 	for _, callSite := range callSites {
 		if err := addParameter(argumentName, callSite); err != nil {
-			return err
+			log.Println(err)
 		}
 	}
 
@@ -75,6 +76,7 @@ func addArgument(name, argType string, position *pos.QueryPos) error {
 
 	fieldList, ok := node.(*ast.FieldList)
 	if !ok {
+		ast.Print(position.Fset, node)
 		return fmt.Errorf("pos must be in a FieldList, got: %T instead", node)
 	}
 
