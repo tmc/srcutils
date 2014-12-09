@@ -65,6 +65,7 @@ func (r *refactor) addArgument(argumentName, argumentType, position string, skip
 		fileName := r.iprog.Fset.Position(file.Pos()).Filename
 		if !r.packageNameRe.MatchString(fileName) {
 			fmt.Fprintln(os.Stderr, "File didn't match:", fileName)
+			continue
 		}
 
 		var buf bytes.Buffer
