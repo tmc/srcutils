@@ -6,9 +6,9 @@ import (
 	"go/build"
 	"go/token"
 	"regexp"
-	"spew"
 
 	"github.com/tmc/refactor_utils/pos"
+	"github.com/tmc/spew"
 
 	"golang.org/x/tools/go/loader"
 	"golang.org/x/tools/go/pointer"
