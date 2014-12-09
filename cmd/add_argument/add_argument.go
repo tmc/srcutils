@@ -13,7 +13,7 @@ import (
 
 	"golang.org/x/tools/imports"
 
-	"github.com/tmc/refactor_utils/pos"
+	"github.com/tmc/srcutils/pos"
 )
 
 func commandAddArgument(options Options) error {

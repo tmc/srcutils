@@ -8,8 +8,7 @@ import (
 	"go/token"
 	"regexp"
 
-	"github.com/tmc/refactor_utils/pos"
-	"github.com/tmc/spew"
+	"github.com/tmc/srcutils/pos"
 
 	"golang.org/x/tools/go/loader"
 	"golang.org/x/tools/go/pointer"
@@ -25,9 +24,9 @@ type refactor struct {
 
 func newRefactor(args []string, packageNameRe *regexp.Regexp) (*refactor, error) {
 	conf := loader.Config{
-		Build: &build.Default,
+		Build:         &build.Default,
 		SourceImports: true,
-		ParserMode: parser.ParseComments,
+		ParserMode:    parser.ParseComments,
 	}
 	args, err := conf.FromArgs(args, true)
 	if err != nil {
@@ -174,6 +173,5 @@ func (r *refactor) parentFunc(path []ast.Node) (*pos.QueryPos, error) {
 			return r.posToQueryPos(fn.Type.Params.Pos())
 		}
 	}
-	spew.Dump(path)
-	return nil, fmt.Errorf("no parent found")
+	return nil, fmt.Errorf("no parent found: %s", r.prog.Fset.Position(path[0].Pos()))
 }
