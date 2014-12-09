@@ -60,14 +60,13 @@ func (r *refactor) addArgument(argumentName, argumentType, position string, skip
 	}
 
 	for file, _ := range modifiedFiles {
-		var buf bytes.Buffer
-		cfg := &printer.Config{}
-		cfg.Fprint(&buf, qpos.Fset, file)
-
 		fileName := r.iprog.Fset.Position(file.Pos()).Filename
 		if !r.packageNameRe.MatchString(fileName) {
 			fmt.Fprintln(os.Stderr, "File didn't match:", fileName)
 		}
+
+				var buf bytes.Buffer
+		printer.Fprint(&buf, qpos.Fset, file)
 
 		if options.write {
 			err := ioutil.WriteFile(fileName, buf.Bytes(), 644)

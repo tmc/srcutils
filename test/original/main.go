@@ -12,6 +12,7 @@ func init() {
 	alreadyPresent(42)
 }
 
+// shouldn't be modified
 func alreadyPresent(foo int) {
 	x(31, "foobar")
 	x(foo, "foobar")

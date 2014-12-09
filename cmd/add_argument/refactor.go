@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"go/ast"
 	"go/build"
+	"go/parser"
 	"go/token"
 	"regexp"
 
@@ -23,8 +24,11 @@ type refactor struct {
 }
 
 func newRefactor(args []string, packageNameRe *regexp.Regexp) (*refactor, error) {
-	conf := loader.Config{Build: &build.Default, SourceImports: true}
-
+	conf := loader.Config{
+		Build: &build.Default,
+		SourceImports: true,
+		ParserMode: parser.ParseComments,
+	}
 	args, err := conf.FromArgs(args, true)
 	if err != nil {
 		return nil, err
