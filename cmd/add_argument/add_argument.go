@@ -29,16 +29,16 @@ func commandAddArgument(options Options) error {
 	parts := strings.SplitN(options.argument, " ", 2)
 	argumentName, argumentType := parts[0], parts[1]
 
-	return r.addArgument(argumentName, argumentType, options.position, options.skipExists)
+	return r.addArgument(argumentName, argumentType, options.position, options.skipExists, options.callgraphDepth)
 }
 
-func (r *refactor) addArgument(argumentName, argumentType, position string, skipExists bool) error {
+func (r *refactor) addArgument(argumentName, argumentType, position string, skipExists bool, depth int) error {
 	qpos, err := r.queryPos(position, false)
 	if err != nil {
 		return err
 	}
 
-	funcPositions, callSites, err := r.callersAndCallsites(qpos)
+	funcPositions, callSites, err := r.callersAndCallsites(qpos, depth)
 	if err != nil {
 		return err
 	}

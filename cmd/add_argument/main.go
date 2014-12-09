@@ -11,12 +11,13 @@ import (
 )
 
 type Options struct {
-	position      string   // position
-	argument      string   // argument to add
-	args          []string // ssa FromArgs
-	write         bool
-	skipExists    bool   // skip if specified name and type are already present
-	packageNameRe string // package name regexp
+	position       string   // position
+	argument       string   // argument to add
+	args           []string // ssa FromArgs
+	write          bool
+	skipExists     bool   // skip if specified name and type are already present
+	packageNameRe  string // package name regexp
+	callgraphDepth int    // depth up the callgraph to make modifications
 }
 
 var options Options
@@ -31,8 +32,10 @@ func init() {
 		"write result to (source) file instead of stdout")
 	flag.BoolVar(&options.skipExists, "skip-exists", true,
 		"if an argument appears to exist already don't add it")
-	flag.StringVar(&options.packageNameRe, "package-regexp", ".*",
-		"package name regex")
+	flag.StringVar(&options.packageNameRe, "package-regexp", "",
+		"regular expression that package names much match to be modified")
+	flag.IntVar(&options.callgraphDepth, "depth", -1,
+		"callgraph traversal limit (-1 for unlimited) ")
 }
 
 func main() {

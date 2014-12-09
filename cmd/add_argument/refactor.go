@@ -114,10 +114,10 @@ func (r *refactor) callers(qpos *pos.QueryPos) ([]*pos.QueryPos, error) {
 	return callers, nil
 }
 
-func (r *refactor) callersAndCallsites(qpos *pos.QueryPos) ([]*pos.QueryPos, []*pos.QueryPos, error) {
+func (r *refactor) callersAndCallsites(qpos *pos.QueryPos, depth int) ([]*pos.QueryPos, []*pos.QueryPos, error) {
 	allCallers, allCallsites := map[token.Pos]*pos.QueryPos{}, map[token.Pos]*pos.QueryPos{}
 
-	err := r.addCallersAndCallsites(qpos, allCallers, allCallsites)
+	err := r.addCallersAndCallsites(qpos, depth, allCallers, allCallsites)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -132,8 +132,11 @@ func (r *refactor) callersAndCallsites(qpos *pos.QueryPos) ([]*pos.QueryPos, []*
 	return resultCallers, resultCallsites, nil
 }
 
-func (r *refactor) addCallersAndCallsites(qpos *pos.QueryPos, allCallers, allCallsites map[token.Pos]*pos.QueryPos) error {
+func (r *refactor) addCallersAndCallsites(qpos *pos.QueryPos, depth int, allCallers, allCallsites map[token.Pos]*pos.QueryPos) error {
 	if _, present := allCallers[qpos.Start]; present {
+		return nil
+	}
+	if depth == 0 {
 		return nil
 	}
 	allCallers[qpos.Start] = qpos
@@ -149,7 +152,7 @@ func (r *refactor) addCallersAndCallsites(qpos *pos.QueryPos, allCallers, allCal
 			return err
 		}
 		if parent != nil {
-			if err := r.addCallersAndCallsites(parent, allCallers, allCallsites); err != nil {
+			if err := r.addCallersAndCallsites(parent, depth-1, allCallers, allCallsites); err != nil {
 				return err
 			}
 		}
