@@ -5,6 +5,7 @@ import (
 	"go/ast"
 	"go/build"
 	"go/token"
+	"regexp"
 	"spew"
 
 	"github.com/tmc/refactor_utils/pos"
@@ -15,12 +16,13 @@ import (
 )
 
 type refactor struct {
-	iprog   *loader.Program
-	prog    *ssa.Program
-	ptraCfg *pointer.Config
+	iprog         *loader.Program
+	prog          *ssa.Program
+	ptraCfg       *pointer.Config
+	packageNameRe *regexp.Regexp
 }
 
-func newRefactor(args []string) (*refactor, error) {
+func newRefactor(args []string, packageNameRe *regexp.Regexp) (*refactor, error) {
 	conf := loader.Config{Build: &build.Default, SourceImports: true}
 
 	args, err := conf.FromArgs(args, true)
@@ -67,6 +69,7 @@ func newRefactor(args []string) (*refactor, error) {
 		iprog,
 		prog,
 		&pointer.Config{Mains: mains, BuildCallGraph: true},
+		packageNameRe,
 	}, nil
 }
 

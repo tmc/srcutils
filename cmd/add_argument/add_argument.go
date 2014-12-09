@@ -7,13 +7,20 @@ import (
 	"go/printer"
 	"io/ioutil"
 	"log"
+	"os"
+	"regexp"
 	"strings"
 
 	"github.com/tmc/refactor_utils/pos"
 )
 
 func commandAddArgument(options Options) error {
-	r, err := newRefactor(options.args)
+	re, err := regexp.Compile(options.packageNameRe)
+	if err != nil {
+		return err
+	}
+
+	r, err := newRefactor(options.args, re)
 	if err != nil {
 		return err
 	}
@@ -54,19 +61,24 @@ func (r *refactor) addArgument(argumentName, argumentType, position string, skip
 
 	for file, _ := range modifiedFiles {
 		var buf bytes.Buffer
-		cfg := &printer.Config{Mode: printer.SourcePos}
+		cfg := &printer.Config{}
 		cfg.Fprint(&buf, qpos.Fset, file)
+
+		fileName := r.iprog.Fset.Position(file.Pos()).Filename
+		if !r.packageNameRe.MatchString(fileName) {
+			fmt.Fprintln(os.Stderr, "File didn't match:", fileName)
+		}
+
 		if options.write {
-			err := ioutil.WriteFile(r.iprog.Fset.Position(file.Pos()).Filename, buf.Bytes(), 644)
+			err := ioutil.WriteFile(fileName, buf.Bytes(), 644)
 			if err != nil {
 				return err
 			}
-			log.Println("wrote", r.iprog.Fset.Position(file.Pos()).Filename)
+			log.Println("wrote", fileName)
 		} else {
 			fmt.Println(string(buf.Bytes()))
 		}
 	}
-
 	return nil
 }
 
