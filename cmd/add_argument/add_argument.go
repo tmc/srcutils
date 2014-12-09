@@ -11,6 +11,8 @@ import (
 	"regexp"
 	"strings"
 
+	"golang.org/x/tools/imports"
+
 	"github.com/tmc/refactor_utils/pos"
 )
 
@@ -65,17 +67,23 @@ func (r *refactor) addArgument(argumentName, argumentType, position string, skip
 			fmt.Fprintln(os.Stderr, "File didn't match:", fileName)
 		}
 
-				var buf bytes.Buffer
+		var buf bytes.Buffer
 		printer.Fprint(&buf, qpos.Fset, file)
 
+		formatted, err := imports.Process(fileName, buf.Bytes(), nil)
+		if err != nil {
+			return err
+		}
+
 		if options.write {
-			err := ioutil.WriteFile(fileName, buf.Bytes(), 644)
+			err := ioutil.WriteFile(fileName, formatted, 0)
 			if err != nil {
 				return err
 			}
 			log.Println("wrote", fileName)
 		} else {
-			fmt.Println(string(buf.Bytes()))
+			fmt.Println(fileName)
+			fmt.Println(string(formatted))
 		}
 	}
 	return nil
