@@ -1,33 +1,35 @@
 package main
 
-func main() {
-	x(42, "life")
+import "golang.org/x/net/context"
+
+func main(ctx context.Context) {
+	x(ctx, 42, "life")
 }
 
-func init() {
-	z(31, "foobar")
+func init(ctx context.Context) {
+	z(ctx, 31, "foobar")
 }
 
-func init() {
-	alreadyPresent(42)
+func init(ctx context.Context) {
+	alreadyPresent(ctx, 42)
 }
 
 // shouldn't be modified
-func alreadyPresent(foo int) {
-	x(31, "foobar")
-	x(foo, "foobar")
+func alreadyPresent(ctx context.Context, foo int) {
+	x(ctx, 31, "foobar")
+	x(ctx, foo, "foobar")
 }
 
-func init() {
-	new(dummy).test()
+func init(ctx context.Context) {
+	new(dummy).test(ctx)
 }
 
 type dummy struct{}
 
-func (d *dummy) test() {
+func (d *dummy) test(ctx context.Context) {
 	baz := &struct{ foo func() }{
 		func() {
-			x(7, "oi")
+			x(ctx, 7, "oi")
 		},
 	}
 	baz.foo()

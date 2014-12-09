@@ -1,5 +1,7 @@
 package main
 
-func z(a int, b string) {
+import "golang.org/x/net/context"
+
+func z(ctx context.Context, a int, b string) {
 	println("⚛")
 }

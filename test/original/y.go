@@ -1,5 +1,7 @@
 package main
 
-func y(a int, b string) {
-	z(a, b)
+import "golang.org/x/net/context"
+
+func y(ctx context.Context, a int, b string) {
+	z(ctx, a, b)
 }
