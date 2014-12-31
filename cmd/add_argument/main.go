@@ -1,7 +1,7 @@
 // Program add_argument inserts a new argument into a function and all of it's callers
 //
 // Example:
-//   $ add_argument -arg="foo int" -pos=$GOPATH/src/github.com/tmc/refactor_utils/test/original/z.go:#20 github.com/tmc/refactor_utils/test/original
+//   $ add_argument -arg="foo int" -pos=$GOPATH/src/github.com/tmc/srcutils/test/original/z.go:#20 github.com/tmc/srcutils/test/original
 package main
 
 import (
