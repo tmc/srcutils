@@ -24,9 +24,8 @@ type refactor struct {
 
 func newRefactor(args []string, packageNameRe *regexp.Regexp) (*refactor, error) {
 	conf := loader.Config{
-		Build:         &build.Default,
-		SourceImports: true,
-		ParserMode:    parser.ParseComments,
+		Build:      &build.Default,
+		ParserMode: parser.ParseComments,
 	}
 	args, err := conf.FromArgs(args, true)
 	if err != nil {
@@ -42,8 +41,8 @@ func newRefactor(args []string, packageNameRe *regexp.Regexp) (*refactor, error)
 	}
 
 	var mode ssa.BuilderMode
-	prog := ssa.Create(iprog, mode)
-	prog.BuildAll()
+	prog := ssa.NewProgram(iprog.Fset, mode)
+	prog.Build()
 
 	// For each initial package (specified on the command line),
 	// if it has a main function, analyze that,
